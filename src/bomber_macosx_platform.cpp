@@ -9,10 +9,12 @@
 
 #include "ResourceManager.h"
 #include "Player.h"
+#include "Game.h"
+
 
 // function declarations
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-void processKeyboardInput(GLFWwindow* window, Player *player);
+void processKeyboardInput(GLFWwindow* window, UserInput *inputs);
 GLFWwindow *openGLInit(int windowWidth, int windowHeight);
 
 // settings
@@ -34,7 +36,7 @@ int main(int argc, char **argv) {
 		};
 
 		// The Player
-		Player *player = new Player(playerVertices);
+		Player player(playerVertices);
 		
 
 		// build and compile the shader program
@@ -42,7 +44,7 @@ int main(int argc, char **argv) {
 		Shader shaderProg = ResourceManager::loadShader("../shaders/vertex.vs", "../shaders/fragment.fs", nullptr, "default");
 
 		// generate the player texture
-		player->texture = ResourceManager::loadTexture("../textures/bomber.png", true, "player");
+		player.texture = ResourceManager::loadTexture("../textures/bomber.png", true, "player");
 
 		
 
@@ -53,7 +55,7 @@ int main(int argc, char **argv) {
 		glBindVertexArray(VAO); 
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);  
-		glBufferData(GL_ARRAY_BUFFER, player->vertices.size() * sizeof(float), &player->vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, player.vertices.size() * sizeof(float), &player.vertices[0], GL_STATIC_DRAW);
 
 		// position attribute
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
@@ -62,12 +64,26 @@ int main(int argc, char **argv) {
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2* sizeof(float)));
 		glEnableVertexAttribArray(1);
 
+		// The user inputs
+		UserInput inputs = {false, false, false, false, false};
+
+
+		// The game
+		Game game(player);
+
 		// render loop
 		// -----------
 		while(!glfwWindowShouldClose(window)) {								
 			// input
 			// -----
-			processKeyboardInput(window, player);	
+			processKeyboardInput(window, &inputs);	
+
+			// Pass control to the game to update the game world
+			// -------------------------------------------------
+			game.update(&inputs);
+
+			// Render the results
+			// ------------------
 
 			// render
 			// ------
@@ -75,7 +91,7 @@ int main(int argc, char **argv) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);					
 
 			// bind player texture
-			glBindTexture(GL_TEXTURE_2D, player->texture.ID);
+			glBindTexture(GL_TEXTURE_2D, game.player.texture.ID);
 	
 			shaderProg.use();
 
@@ -92,13 +108,16 @@ int main(int argc, char **argv) {
 			// render container
 			glBindVertexArray(VAO);
 						
-			shaderProg.setMatrix4("model", player->model);
+			shaderProg.setMatrix4("model", game.player.model);
 
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 
 			// glfw: swap buffers and poll IO events
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+
+			// Clear the inputs struct
+			inputs = {false, false, false, false, false};
 		}
 		// de-allocate all resources once they've outlived their purpose
 		// -------------------------------------------------------------
@@ -118,24 +137,27 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void processKeyboardInput(GLFWwindow* window, Player *player)
+void processKeyboardInput(GLFWwindow* window, UserInput *inputs)
 {
 	if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		std::cout << "Esc key pressed, closing window" << std::endl;
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 	else {
-		if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			player->moveLeft();
+		if((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) || (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)) {
+			inputs->left = true;
 		}
-		if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			player->moveRight();
+		if((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ||  (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)) {
+			inputs->right = true;
 		}
-		if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			player->moveUp();
+		if((glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) || (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)) {
+			inputs->up = true;
 		}
-		if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			player->moveDown();
+		if((glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) ||(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)) {
+			inputs->down = true;
+		}
+		if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			inputs->space = true;
 		}
 	}		
 }

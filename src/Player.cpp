@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(std::vector<float> vertices)
-	:vertices(vertices), model(glm::mat4(1.0f)), speed(0.05)
+	:Entity(vertices, glm::mat4(1.0f)), speed(0.05)
 {}
 
 void Player::moveLeft() {
