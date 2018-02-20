@@ -2,6 +2,8 @@
 #define GAME_H
 
 #include "Player.h"
+#include "SpriteRenderer.h"
+#include "ResourceManager.h"
 
 // user input (to be moved somewhere else)
 struct UserInput {
@@ -14,7 +16,11 @@ struct UserInput {
 
 class Game {
 public:	
-	Game(Player player);
+	Game(int screenWidth, int screenHeight);
+	void init();
+	// The size of the window
+	int screenWidth;
+	int screenHeight;
 	// The player
 	Player player;
 	// The game's camera (not currently written)
