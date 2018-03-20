@@ -9,10 +9,14 @@ uniform vec3 spriteColour;
 
 void main()
 {
+<<<<<<< HEAD
 	vec4 texel = texture(tex, texCoords);
 	if(texel.a < 0.5)
 		discard;
 	FragColour = vec4(spriteColour, 1.0f) * texel;
 
 	//FragColour = vec4(spriteColour, 1.0f) * texture(tex, texCoords);
+=======
+	FragColour = vec4(spriteColour, 1.0f) * texture(tex, texCoords);
+>>>>>>> origin/master
 }

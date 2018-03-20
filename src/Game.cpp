@@ -4,7 +4,11 @@
 SpriteRenderer *renderer;
 
 Game::Game(int screenWidth, int screenHeight)
+<<<<<<< HEAD
 	:screenWidth(screenWidth), screenHeight(screenHeight), player(), bombs() 
+=======
+	:screenWidth(screenWidth), screenHeight(screenHeight), player()
+>>>>>>> origin/master
 {	
 	// Load shader
 	ResourceManager::loadShader("../shaders/vertex.vs", "../shaders/fragment.fs", nullptr, "sprite");
@@ -22,14 +26,18 @@ Game::Game(int screenWidth, int screenHeight)
 	// Load player texture
 	this->player.texture = ResourceManager::loadTexture("../textures/bomber.png", true, "player");
 
+<<<<<<< HEAD
 	ResourceManager::loadTexture("../textures/bomb.png", false, "bomb");
 	ResourceManager::loadTexture("../textures/border.png", false, "border");
 
+=======
+>>>>>>> origin/master
 	// Set render-specific controls
 	Shader myShader = ResourceManager::getShader("sprite");
 	renderer = new SpriteRenderer(myShader);
 }
 
+<<<<<<< HEAD
 void Game::update(UserInput *inputs, double deltaTime) {	
 	// NOTE: temp static that should later be moved somewhere
 	static float fireTime = 1.0f;
@@ -37,6 +45,9 @@ void Game::update(UserInput *inputs, double deltaTime) {
 
 	// Process the inputs
 	// ------------------
+=======
+void Game::update(UserInput *inputs) {
+>>>>>>> origin/master
 	if(inputs->left) {
 		player.moveLeft(deltaTime);
 		player.isFacingLeft = true;
@@ -86,6 +97,7 @@ void Game::update(UserInput *inputs, double deltaTime) {
 		}
 	}
 
+<<<<<<< HEAD
 
 	// Draw the game objects
 	// ---------------------
@@ -105,4 +117,7 @@ void Game::update(UserInput *inputs, double deltaTime) {
 	Texture2D borderTex = ResourceManager::getTexture("border");
 	renderer->DrawSprite(borderTex, glm::vec2(0.0f, 550.0f), glm::vec2(800.0f, 100.0f), 0.0f, glm::vec3(1.0f));
 	
+=======
+	renderer->DrawSprite(this->player.texture, this->player.position, this->player.size, this->player.rotationDeg, this->player.colour);
+>>>>>>> origin/master
 }
