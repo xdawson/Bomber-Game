@@ -4,11 +4,6 @@
 
 #include <GLFW/glfw3.h>
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
-#include "ResourceManager.h"
-#include "Player.h"
 #include "Game.h"
 
 
@@ -28,59 +23,23 @@ int main(int argc, char **argv) {
 		// -----------------------------
 		glEnable(GL_DEPTH_TEST);
 
-		std::vector<float> playerVertices = {
-			// positions  // texture coords
-			-0.5f,  0.5f, 0.0f, 1.0f,	// top left
-			-0.5f, -0.5f, 0.0f, 0.0f,	// bottom left		
-			 0.5f, -0.5f, 1.0f, 0.0f	// bottom right
-		};
-
-		// The Player
-		Player player(playerVertices);
-		
-
-		// build and compile the shader program
-		// ------------------------------------
-		Shader shaderProg = ResourceManager::loadShader("../shaders/vertex.vs", "../shaders/fragment.fs", nullptr, "default");
-
-		// generate the player texture
-		player.texture = ResourceManager::loadTexture("../textures/bomber.png", true, "player");
-
-		
-
-		unsigned int VBO, VAO;
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-
-		glBindVertexArray(VAO); 
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);  
-		glBufferData(GL_ARRAY_BUFFER, player.vertices.size() * sizeof(float), &player.vertices[0], GL_STATIC_DRAW);
-
-		// position attribute
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-		// texture attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2* sizeof(float)));
-		glEnableVertexAttribArray(1);
-
 		// The user inputs
 		UserInput inputs = {false, false, false, false, false};
 
 
 		// The game
-		Game game(player);
+		Game game(SRC_WIDTH, SRC_HEIGHT);
+
+		double time = glfwGetTime();
+		double deltaTime;
 
 		// render loop
 		// -----------
-		while(!glfwWindowShouldClose(window)) {								
-			// input
+		while(!glfwWindowShouldClose(window)) {								 
+
+			// Input
 			// -----
 			processKeyboardInput(window, &inputs);	
-
-			// Pass control to the game to update the game world
-			// -------------------------------------------------
-			game.update(&inputs);
 
 			// Render the results
 			// ------------------
@@ -88,29 +47,16 @@ int main(int argc, char **argv) {
 			// render
 			// ------
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);					
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 
-			// bind player texture
-			glBindTexture(GL_TEXTURE_2D, game.player.texture.ID);
-	
-			shaderProg.use();
+			// Get the time passed just before rendering the frame
+			deltaTime = glfwGetTime() - time;						
+			// Pass control to the game to update the game world
+			// -------------------------------------------------
+			game.update(&inputs, deltaTime);				
 
-			// GLM camera work
-			// ----------------			
-			glm::mat4 view = glm::mat4(1.0f);
-			glm::mat4 projection = glm::mat4(1.0f);				
-			view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
-			projection = glm::perspective(glm::radians(45.0f), ((float)SRC_WIDTH / (float)SRC_HEIGHT), 0.1f, 100.0f);
-			// set the uniform matrices in the vertex shader					
-			shaderProg.setMatrix4("view", view);
-			shaderProg.setMatrix4("projection", projection);
-
-			// render container
-			glBindVertexArray(VAO);
-						
-			shaderProg.setMatrix4("model", game.player.model);
-
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			// Set the new time
+			time = glfwGetTime();
 
 			// glfw: swap buffers and poll IO events
 			glfwSwapBuffers(window);
@@ -119,10 +65,6 @@ int main(int argc, char **argv) {
 			// Clear the inputs struct
 			inputs = {false, false, false, false, false};
 		}
-		// de-allocate all resources once they've outlived their purpose
-		// -------------------------------------------------------------
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
 	}
 	else {
 

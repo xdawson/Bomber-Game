@@ -9,7 +9,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/Users/chris/Documents/Bomber Game/build/bomber_macosx_platform",
+            "program": "/Users/chris/Documents/Bomber Game/build/bomber",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
