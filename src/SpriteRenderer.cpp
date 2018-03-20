@@ -36,10 +36,6 @@ void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec
 void SpriteRenderer::initRenderData() {
 	// Configure VBO/VAO
 	unsigned int VBO;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 	std::vector<float> vertices = { 
         // Pos      // Tex
         0.0f, 1.0f, 0.0f, 0.0f,

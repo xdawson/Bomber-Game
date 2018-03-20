@@ -29,12 +29,9 @@ int main(int argc, char **argv) {
 
 		// The game
 		Game game(SRC_WIDTH, SRC_HEIGHT);
-<<<<<<< HEAD
 
 		double time = glfwGetTime();
 		double deltaTime;
-=======
->>>>>>> origin/master
 
 		// render loop
 		// -----------
@@ -52,7 +49,6 @@ int main(int argc, char **argv) {
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 
-<<<<<<< HEAD
 			// Get the time passed just before rendering the frame
 			deltaTime = glfwGetTime() - time;						
 			// Pass control to the game to update the game world
@@ -61,11 +57,6 @@ int main(int argc, char **argv) {
 
 			// Set the new time
 			time = glfwGetTime();
-=======
-			// Pass control to the game to update the game world
-			// -------------------------------------------------
-			game.update(&inputs);				
->>>>>>> origin/master
 
 			// glfw: swap buffers and poll IO events
 			glfwSwapBuffers(window);

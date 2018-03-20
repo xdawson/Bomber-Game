@@ -2,10 +2,7 @@
 #define GAME_H
 
 #include "Player.h"
-<<<<<<< HEAD
 #include "Bomb.h"
-=======
->>>>>>> origin/master
 #include "SpriteRenderer.h"
 #include "ResourceManager.h"
 
@@ -21,10 +18,6 @@ struct UserInput {
 class Game {
 public:	
 	Game(int screenWidth, int screenHeight);
-<<<<<<< HEAD
-=======
-	void init();
->>>>>>> origin/master
 	// The size of the window
 	int screenWidth;
 	int screenHeight;

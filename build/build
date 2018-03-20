@@ -1,7 +1,3 @@
 #!/bin/bash
 
-<<<<<<< HEAD
 clang++ ../src/*.cpp -o bomber -framework OpenGL -lglfw -lstdc++ -Wall -ggdb -std=c++1z
-=======
-clang++ ../src/bomber_macosx_platform.cpp ../src/Shader.cpp ../src/Texture2D.cpp ../src/ResourceManager.cpp ../src/glad.cpp ../src/Player.cpp ../src/Game.cpp  ../src/SpriteRenderer.cpp -o ~/Documents/Bomber\ Game/build/bomber_macosx_platform -framework OpenGL -lglfw -lstdc++ -Wall -ggdb -std=c++1z
->>>>>>> origin/master
